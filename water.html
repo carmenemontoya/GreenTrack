@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenTrack Water</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Sidebar -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            🌿 GreenTrack
+        </div>
+
+        <ul class="menu">
+
+            <li>
+                <a href="index.html"><span class="material-symbols-outlined">dashboard</span>Dashboard</a>
+            </li>
+
+            <li>
+                <a href="energy.html"><span class="material-symbols-outlined">bolt</span>Energy</a>
+            </li>
+
+            <li class="active">
+                <a href="water.html"><span class="material-symbols-outlined">water_drop</span>Water</a>
+            </li>
+
+            <li>
+                <a href="waste.html"><span class="material-symbols-outlined">recycling</span>Waste</a>
+            </li>
+
+            <li>
+                <a href="reports.html"><span class="material-symbols-outlined">description</span>Reports</a>
+            </li>
+
+            <li>
+                <a href="upload.html"><span class="material-symbols-outlined">upload</span>Upload Data</a>
+            </li>
+
+        </ul>
+
+        <div class="sidebar-footer">
+            <button class="signout-button" id="signOutButton">
+                <span class="material-symbols-outlined">logout</span>
+                Sign Out
+            </button>
+        </div>
+
+    </aside>
+
+    <!-- Main Content -->
+
+    <main class="main">
+
+        <!-- Top Bar -->
+
+        <header class="topbar">
+
+            <div>
+                <h1>Water Management Dashboard</h1>
+                <p class="subtitle">Monitor campus water consumption, identify high-usage buildings, and support water conservation efforts.</p>
+            </div>
+
+            <div class="profile">
+                <div class="profile-info">
+                    <span class="material-symbols-outlined">account_circle</span>
+
+                    <div>
+                        <strong>Carmen Montoya</strong><br>
+                        <small>Student</small>
+                    </div>
+                </div>
+            </div>
+
+        </header>
+
+        <!-- KPI Cards -->
+
+        <section class="cards">
+
+            <div class="card">
+                <h3>💧 Total Water Consumption</h3>
+                <h2>820,000 gal</h2>
+                <p>↑ 2% from last month</p>
+            </div>
+
+            <div class="card">
+                <h3>📈 Daily Average</h3>
+                <h2>27,333 gal</h2>
+                <p>Based on current month</p>
+            </div>
+
+            <div class="card">
+                <h3>🏫 Highest Consuming Building</h3>
+                <h2>Student Union</h2>
+                <p>148,200 gal</p>
+            </div>
+
+            <div class="card">
+                <h3>💧 Water Saved</h3>
+                <h2>45,600 gal</h2>
+                <p>Compared to last year</p>
+            </div>
+
+        </section>
+
+        <!-- Charts -->
+
+        <section class="chart-grid">
+
+            <div class="chart-box chart-panel">
+                <div class="chart-title">Monthly Water Usage</div>
+                <canvas id="waterLineChart"></canvas>
+            </div>
+
+            <div class="chart-box chart-panel">
+                <div class="chart-title">Water Consumption by Building</div>
+                <canvas id="waterBuildingBarChart"></canvas>
+            </div>
+
+        </section>
+
+        <!-- Water Records -->
+
+        <section class="updates">
+
+            <h2>Recent Water Readings</h2>
+
+            <table>
+                <tr>
+                    <th>Building</th>
+                    <th>Date</th>
+                    <th>Water Used</th>
+                    <th>Change</th>
+                    <th>Status</th>
+                </tr>
+                <tr>
+                    <td>Student Union</td>
+                    <td>Jul 28</td>
+                    <td>14,820 gal</td>
+                    <td>+6%</td>
+                    <td><span class="badge badge--high">High</span></td>
+                </tr>
+                <tr>
+                    <td>Engineering Building</td>
+                    <td>Jul 28</td>
+                    <td>13,420 gal</td>
+                    <td>+2%</td>
+                    <td><span class="badge badge--normal">Normal</span></td>
+                </tr>
+                <tr>
+                    <td>Science Hall</td>
+                    <td>Jul 27</td>
+                    <td>11,300 gal</td>
+                    <td>-3%</td>
+                    <td><span class="badge badge--normal">Normal</span></td>
+                </tr>
+                <tr>
+                    <td>Library</td>
+                    <td>Jul 27</td>
+                    <td>9,850 gal</td>
+                    <td>-1%</td>
+                    <td><span class="badge badge--low">Low</span></td>
+                </tr>
+                <tr>
+                    <td>Administration</td>
+                    <td>Jul 26</td>
+                    <td>8,120 gal</td>
+                    <td>+1%</td>
+                    <td><span class="badge badge--normal">Normal</span></td>
+                </tr>
+            </table>
+
+        </section>
+
+        <!-- Quick Actions -->
+
+        <section class="card quick-actions">
+            <h2>Quick Actions</h2>
+            <div class="action-buttons">
+                <button class="action-button">
+                    <span class="material-symbols-outlined">upload_file</span>
+                    Upload Water Data
+                </button>
+                <button class="action-button">
+                    <span class="material-symbols-outlined">summarize</span>
+                    Generate Report
+                </button>
+                <button class="action-button">
+                    <span class="material-symbols-outlined">file_download</span>
+                    Export CSV
+                </button>
+                <button class="action-button">
+                    <span class="material-symbols-outlined">download</span>
+                    Download PDF
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="js/script.js"></script>
+
+</body>
+</html>

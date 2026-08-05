@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenTrack Login</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="login-page">
+
+<div class="login-container">
+    <div class="login-branding">
+        <div class="brand-mark">🌿</div>
+        <div>
+            <h1>GreenTrack</h1>
+            <p class="brand-subtitle">Campus Sustainability Dashboard</p>
+            <p class="brand-description">Monitor campus energy, water, and waste data through one centralized sustainability platform.</p>
+        </div>
+    </div>
+
+    <div class="login-grid">
+        <section class="login-card">
+            <h2>Welcome Back</h2>
+            <p class="login-subtitle">Sign in to access your sustainability dashboard.</p>
+
+            <form class="login-form" action="#" onsubmit="return false;">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <div class="input-group">
+                        <span class="material-symbols-outlined">mail</span>
+                        <input id="email" type="email" placeholder="Enter your email address" value="admin@greentrack.edu" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-group">
+                        <span class="material-symbols-outlined">lock</span>
+                        <input id="password" type="password" placeholder="Enter your password" required>
+                        <button type="button" class="icon-button" id="togglePassword" aria-label="Show password">
+                            <span class="material-symbols-outlined">visibility</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="accountType">Account Type</label>
+                    <div class="input-group select-group">
+                        <span class="material-symbols-outlined">person</span>
+                        <select id="accountType">
+                            <option>Administrator</option>
+                            <option>Sustainability Office Staff</option>
+                            <option>Student</option>
+                            <option>Faculty</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-meta">
+                    <label class="checkbox-label"><input type="checkbox" id="rememberMe"> Remember me</label>
+                    <a href="#" class="text-link">Forgot Password?</a>
+                </div>
+
+                <button class="primary-button" id="loginButton" type="button">
+                    <span class="material-symbols-outlined">login</span>
+                    Sign In
+                </button>
+                <p class="login-message" id="loginMessage"></p>
+            </form>
+        </section>
+
+        <section class="info-panel">
+            <div class="card demo-card">
+                <h3>Demo Accounts</h3>
+                <div class="demo-row">
+                    <strong>Administrator</strong>
+                    <p>Email: <a href="mailto:admin@greentrack.edu">admin@greentrack.edu</a></p>
+                    <p>Role: Full access to upload data, generate reports, and manage environmental records.</p>
+                </div>
+                <div class="demo-row">
+                    <strong>Student</strong>
+                    <p>Email: <a href="mailto:student@greentrack.edu">student@greentrack.edu</a></p>
+                    <p>Role: View-only dashboard access.</p>
+                </div>
+            </div>
+
+            <div class="card notice-card login-notice">
+                <div class="notice-heading">
+                    <span class="material-symbols-outlined">security</span>
+                    <div>
+                        <h3>Secure Access</h3>
+                        <p>Access to environmental data is controlled by user roles. Administrators can manage data, while students and faculty have read-only access.</p>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="login-footer">
+                <p>GreenTrack © 2026</p>
+                <p>Campus Sustainability Management System</p>
+            </footer>
+        </section>
+    </div>
+</div>
+
+<script src="js/script.js"></script>
+</body>
+</html>
