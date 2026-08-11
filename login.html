@@ -36,7 +36,7 @@
                     <label for="email">Email</label>
                     <div class="input-group">
                         <span class="material-symbols-outlined">mail</span>
-                        <input id="email" type="email" placeholder="Enter your email address" value="admin@greentrack.edu" required>
+                        <input id="email" type="email" placeholder="Enter your email" autocomplete="username" required>
                     </div>
                 </div>
 
@@ -44,7 +44,7 @@
                     <label for="password">Password</label>
                     <div class="input-group">
                         <span class="material-symbols-outlined">lock</span>
-                        <input id="password" type="password" placeholder="Enter your password" required>
+                        <input id="password" type="password" placeholder="Enter your password" autocomplete="current-password" required>
                         <button type="button" class="icon-button" id="togglePassword" aria-label="Show password">
                             <span class="material-symbols-outlined">visibility</span>
                         </button>
@@ -56,6 +56,7 @@
                     <div class="input-group select-group">
                         <span class="material-symbols-outlined">person</span>
                         <select id="accountType">
+                            <option value="" disabled selected>Select account type</option>
                             <option>Administrator</option>
                             <option>Sustainability Office Staff</option>
                             <option>Student</option>
@@ -111,5 +112,9 @@
 </div>
 
 <script src="js/script.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/api.js"></script>
+<script src="js/upload.js"></script>
+<script src="js/crud.js"></script>
 </body>
 </html>
