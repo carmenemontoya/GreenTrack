@@ -424,8 +424,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (loginButton && loginMessage) {
         loginButton.addEventListener("click", function () {
-            localStorage.setItem("greentrackLoggedIn", "true");
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value;
+            const result = login(email, password);
+
+            if (!result.success) {
+                loginMessage.textContent = result.message;
+                loginMessage.style.color = "#d32f2f";
+                return;
+            }
+
             loginMessage.textContent = "Signing in...";
+            loginMessage.style.color = "#1b5e20";
             setTimeout(function () {
                 window.location.href = "index.html";
             }, 250);
@@ -435,13 +445,15 @@ document.addEventListener("DOMContentLoaded", function () {
     const signOutButton = document.getElementById("signOutButton");
     if (signOutButton) {
         signOutButton.addEventListener("click", function () {
+            localStorage.removeItem("greenTrackUser");
             localStorage.removeItem("greentrackLoggedIn");
             window.location.href = "login.html";
         });
     }
 
     const currentPath = window.location.pathname.split("/").pop();
-    const loggedIn = localStorage.getItem("greentrackLoggedIn") === "true";
+    const currentUser = getCurrentUser();
+    const loggedIn = currentUser !== null;
 
     if (currentPath !== "login.html" && !loggedIn) {
         window.location.href = "login.html";
@@ -449,5 +461,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (currentPath === "login.html" && loggedIn) {
         window.location.href = "index.html";
+    }
+    // Update profile display with current user information
+    function formatRole(role) {
+        if (!role) return "";
+        return role.charAt(0).toUpperCase() + role.slice(1);
+    }
+
+    if (currentUser) {
+        const profileStrong = document.querySelector('.profile .profile-info strong');
+        const profileSmall = document.querySelector('.profile .profile-info small');
+
+        if (profileStrong) profileStrong.textContent = currentUser.name || "";
+        if (profileSmall) profileSmall.textContent = formatRole(currentUser.role) || "";
     }
 });
