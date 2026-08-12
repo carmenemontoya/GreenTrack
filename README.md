@@ -39,9 +39,7 @@ GreenTrack includes four demo user roles:
 * HTML
 * CSS
 * JavaScript
-* localStorage
 * GitHub
-* GitHub Pages
 * Visual Studio Code
 * Figma
 
