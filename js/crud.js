@@ -12,23 +12,45 @@ function displayEnvironmentalData(records) {
 
         const row = document.createElement("tr");
 
-        row.innerHTML = `
-            <td>${record.building}</td>
-            <td>${record.category}</td>
-            <td>${record.date}</td>
-            <td>${record.reading}</td>
-            <td>${record.unit}</td>
-            <td>
-                <button onclick="editRecord(${record.id})">
-                    Edit
-                </button>
+        const buildingCell = document.createElement("td");
+        buildingCell.textContent = record.building || "";
+        row.appendChild(buildingCell);
 
-                <button onclick="removeRecord(${record.id})">
-                    Delete
-                </button>
-            </td>
-        `;
+        const categoryCell = document.createElement("td");
+        categoryCell.textContent = record.category || "";
+        row.appendChild(categoryCell);
 
+        const dateCell = document.createElement("td");
+        dateCell.textContent = record.date || "";
+        row.appendChild(dateCell);
+
+        const readingCell = document.createElement("td");
+        readingCell.textContent = record.reading || "";
+        row.appendChild(readingCell);
+
+        const unitCell = document.createElement("td");
+        unitCell.textContent = record.unit || "";
+        row.appendChild(unitCell);
+
+        const actionCell = document.createElement("td");
+
+        const editButton = document.createElement("button");
+        editButton.type = "button";
+        editButton.textContent = "Edit";
+        editButton.addEventListener("click", function () {
+            editRecord(record.id);
+        });
+        actionCell.appendChild(editButton);
+
+        const deleteButton = document.createElement("button");
+        deleteButton.type = "button";
+        deleteButton.textContent = "Delete";
+        deleteButton.addEventListener("click", function () {
+            removeRecord(record.id);
+        });
+        actionCell.appendChild(deleteButton);
+
+        row.appendChild(actionCell);
         tableBody.appendChild(row);
     });
 }
