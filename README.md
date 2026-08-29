@@ -128,9 +128,9 @@ The three primary environmental categories are Energy, Water, and Waste.
 
 ## Purpose
 
-GreenTrack was developed to demonstrate how a centralized information system can help organize and manage campus environmental data.
+GreenTrack was developed to address a campus sustainability reporting problem where environmental data for energy, water, and waste was managed across separate spreadsheets. This made it difficult to maintain consistent records, compare historical data, monitor sustainability performance, and create accurate reports.
 
-The project demonstrates concepts including database integration, CRUD operations, API communication, data visualization, role-based access, CSV processing, testing, and web application development.
+The project focused on designing a centralized solution that allows users to view environmental data, monitor trends, manage records, and generate reports from one system.
 
 ## Author
 
