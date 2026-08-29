@@ -1,62 +1,139 @@
 # GreenTrack
 
-GreenTrack is a campus sustainability dashboard prototype created for my IT299 Integrative Project. The purpose of GreenTrack is to provide a centralized way to organize and view environmental data related to energy, water, and waste.
+GreenTrack is a campus sustainability dashboard created for my IT299 Integrative Project. The application provides a centralized platform for tracking, managing, and visualizing environmental data related to campus energy, water, and waste.
 
-## Project Features
+The project combines a Flask web application with a PostgreSQL database to provide data-driven dashboards, environmental data management, CSV uploads, reporting, and role-based access.
 
-* Sustainability dashboard with environmental data visualizations
-* Energy, water, and waste tracking pages
-* CSV environmental data upload
-* Input validation
-* Mock user authentication
-* Role-based access control
-* CRUD (Create, Read, Update, Delete) functionality
-* Environmental reports
-* Browser-based data storage using localStorage
+## Features
 
-## User Roles
-
-GreenTrack includes four demo user roles:
-
-* **Admin** — Can view and manage environmental data
-* **Staff** — Can view and manage environmental data
-* **Student** — View-only access
-* **Faculty** — View-only access
-
-## Demo Login Credentials
-
-| Role    | Email                                                   | Password   |
-| ------- | ------------------------------------------------------- | ---------- |
-| Admin   | [admin@greentrack.edu](mailto:admin@greentrack.edu)     | admin123   |
-| Staff   | [staff@greentrack.edu](mailto:staff@greentrack.edu)     | staff123   |
-| Student | [student@greentrack.edu](mailto:student@greentrack.edu) | student123 |
-| Faculty | [faculty@greentrack.edu](mailto:faculty@greentrack.edu) | faculty123 |
-
-> These accounts are for demonstration purposes only and are part of the static prototype.
+- Campus sustainability dashboard with energy, water, and waste summaries
+- Interactive data visualizations using PostgreSQL data
+- Individual Energy, Water, and Waste dashboards
+- Building-level environmental data analysis
+- CSV data uploads for energy, water, and waste records
+- Environmental record editing and deletion
+- Filtering and sorting of environmental records
+- Sustainability report filtering
+- CSV and PDF report exports
+- Role-based access for Admin, Staff, Student, and Faculty users
+- Modern and responsive dashboard interface
 
 ## Technologies Used
 
-* HTML
-* CSS
-* JavaScript
-* GitHub
-* Visual Studio Code
-* Figma
+- Python
+- Flask
+- PostgreSQL
+- HTML
+- CSS
+- JavaScript
+- Chart.js
 
-## JavaScript Components
+## Project Structure
 
-* `auth.js` — User authentication and role-based access control
-* `api.js` — Mock API and environmental data storage
-* `crud.js` — CRUD operations
-* `upload.js` — CSV upload, parsing, and data validation
+```text
+GreenTrack/
+├── data/
+├── static/
+│   ├── css/
+│   └── js/
+├── templates/
+│   ├── energy.html
+│   ├── index.html
+│   ├── login.html
+│   ├── reports.html
+│   ├── upload.html
+│   ├── waste.html
+│   └── water.html
+├── app.py
+├── requirements.txt
+└── README.md
+```
 
-## Project Scope
+## Dashboard
 
-GreenTrack is a static prototype developed for academic purposes. It uses mock environmental data and browser-based storage rather than a production database or backend server.
+The main dashboard provides an overview of campus sustainability data. Energy, water, and waste information is retrieved from PostgreSQL and displayed through summary cards, charts, and environmental records.
 
-The project does not connect to university internal systems or collect real-time environmental data.
+The visualizations use a consistent color system:
+
+- Energy — Pastel Yellow
+- Water — Light Blue
+- Waste — Soft Peach
+- Green — Primary interface accent
+
+## Environmental Data Management
+
+Authorized users can upload environmental data using CSV files. GreenTrack supports separate uploads for:
+
+- Energy consumption data in kWh
+- Water consumption data in gallons
+- Waste management data in pounds
+
+Environmental records can also be filtered, sorted, edited, and deleted through the application.
+
+## Reports
+
+The Sustainability Reports page allows users to review environmental data by category and reporting period.
+
+Reports can be exported as:
+
+- CSV
+- PDF
+
+Report information is generated from the environmental data stored in PostgreSQL.
+
+## Role-Based Access
+
+GreenTrack uses role-based access to control application features.
+
+### Admin and Staff
+
+- View sustainability dashboards
+- Upload environmental data
+- Edit records
+- Delete records
+- Generate reports
+
+### Student and Faculty
+
+- View sustainability dashboards
+- View environmental information
+- Read-only access to environmental data
+
+## Demo Login Credentials
+
+The following demo accounts can be used to test GreenTrack's role-based access:
+
+| Role | Email | Password |
+| --- | --- | --- |
+| Admin | admin@greentrack.edu | admin123 |
+| Staff | staff@greentrack.edu | staff123 |
+| Student | student@greentrack.edu | student123 |
+| Faculty | faculty@greentrack.edu | faculty123 |
+
+> **Note:** These credentials are for demonstration purposes only and do not represent real user accounts or sensitive information.
+
+## Database
+
+GreenTrack uses PostgreSQL to store environmental information for campus buildings.
+
+The application tracks:
+
+- Building
+- Environmental category
+- Date recorded
+- Reading
+- Unit
+
+The three primary environmental categories are Energy, Water, and Waste.
+
+## Purpose
+
+GreenTrack was developed to demonstrate how a centralized information system can help organize and manage campus environmental data.
+
+The project demonstrates concepts including database integration, CRUD operations, API communication, data visualization, role-based access, CSV processing, testing, and web application development.
 
 ## Author
 
 **Carmen Montoya**
-IT299 Integrative Project
+
+Information Technology Student
