@@ -61,6 +61,10 @@ The technical solution includes:
 
 ## Project Preview
 
+### Login
+
+![GreenTrack Login](screenshots/login.png)
+
 ### Campus Sustainability Dashboard
 
 ![GreenTrack Campus Sustainability Dashboard](screenshots/dashboard.png)
