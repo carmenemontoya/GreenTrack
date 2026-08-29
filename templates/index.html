@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenTrack Dashboard</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Sidebar -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <span class="material-symbols-outlined">eco</span> GreenTrack
+        </div>
+
+        <ul class="menu">
+
+            <li class="active">
+                <a href="{{ url_for('index') }}"><span class="material-symbols-outlined">dashboard</span>Dashboard</a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('energy') }}"><span class="material-symbols-outlined">bolt</span>Energy</a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('water') }}"><span class="material-symbols-outlined">water_drop</span>Water</a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('waste') }}"><span class="material-symbols-outlined">recycling</span>Waste</a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('reports') }}"><span class="material-symbols-outlined">description</span>Reports</a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('upload') }}"><span class="material-symbols-outlined">upload</span>Upload Data</a>
+            </li>
+
+        </ul>
+
+        <div class="sidebar-footer">
+            <button class="signout-button" id="signOutButton">
+                <span class="material-symbols-outlined">logout</span>
+                Sign Out
+            </button>
+        </div>
+
+    </aside>
+
+    <!-- Main Content -->
+
+    <main class="main">
+
+        <!-- Top Bar -->
+
+        <header class="topbar">
+
+            <h1>Campus Sustainability Dashboard</h1>
+
+            <div class="profile">
+                <div class="profile-info">
+                    <span class="material-symbols-outlined">account_circle</span>
+
+                    <div>
+                        <strong>Carmen Montoya</strong><br>
+                        <small>Student</small>
+                    </div>
+                </div>
+            </div>
+
+        </header>
+
+        <!-- Cards -->
+
+        <section class="cards">
+
+            <div class="card">
+
+                <div class="card-icon card-icon--energy"><span class="material-symbols-outlined">bolt</span></div>
+
+                <h3>Electricity</h3>
+
+                <h2 id="dashboardEnergyTotal">0 kWh</h2>
+
+                <p>↓ 4% from last month</p>
+
+            </div>
+
+            <div class="card">
+
+                <div class="card-icon card-icon--water"><span class="material-symbols-outlined">water_drop</span></div>
+
+                <h3>Water</h3>
+
+                <h2 id="dashboardWaterTotal">0 gal</h2>
+
+                <p>↑ 2% from last month</p>
+
+            </div>
+
+            <div class="card">
+
+                <div class="card-icon card-icon--waste"><span class="material-symbols-outlined">recycling</span></div>
+
+                <h3>Waste</h3>
+
+                <h2 id="dashboardWasteTotal">0 lbs</h2>
+
+                <p>↑ 8% recycled</p>
+
+            </div>
+
+        </section>
+
+        <!-- Campus Sustainability Trends -->
+
+        <section class="chart-panel" style="margin-top: 20px; margin-bottom: 30px;">
+            <div class="chart-title" style="margin-bottom: 20px;">Campus Sustainability Trends</div>
+            <div style="width: 100%; padding-bottom: 20px;">
+                <canvas id="dashboardTrendChart"></canvas>
+            </div>
+        </section>
+
+        <!-- Table -->
+
+        <section class="updates">
+
+            <h2>Recent Environmental Updates</h2>
+
+            <div class="table-filters" style="margin-bottom: 16px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <label for="filterCategory" style="font-size: 14px; font-weight: 500;">Category:</label>
+                    <select id="filterCategory" style="padding: 6px 10px; border-radius: 8px; border: 1px solid #E5E7EB; font-size: 14px;">
+                        <option value="All Categories">All Categories</option>
+                        <option value="Energy">Energy</option>
+                        <option value="Water">Water</option>
+                        <option value="Waste">Waste</option>
+                    </select>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <label for="filterBuilding" style="font-size: 14px; font-weight: 500;">Building:</label>
+                    <select id="filterBuilding" style="padding: 6px 10px; border-radius: 8px; border: 1px solid #E5E7EB; font-size: 14px;">
+                        <option value="All Buildings">All Buildings</option>
+                        <option value="Science Building">Science Building</option>
+                        <option value="Student Center">Student Center</option>
+                        <option value="Library">Library</option>
+                        <option value="Engineering Building">Engineering Building</option>
+                        <option value="Administration Building">Administration Building</option>
+                    </select>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <label for="filterSort" style="font-size: 14px; font-weight: 500;">Sort By:</label>
+                    <select id="filterSort" style="padding: 6px 10px; border-radius: 8px; border: 1px solid #E5E7EB; font-size: 14px;">
+                        <option value="Newest First">Newest First</option>
+                        <option value="Oldest First">Oldest First</option>
+                        <option value="Building A-Z">Building A-Z</option>
+                        <option value="Building Z-A">Building Z-A</option>
+                        <option value="Reading Low to High">Reading Low to High</option>
+                        <option value="Reading High to Low">Reading High to Low</option>
+                    </select>
+                </div>
+            </div>
+
+            <table>
+
+                <tr>
+
+                    <th>Building</th>
+
+                    <th>Category</th>
+
+                    <th>Date</th>
+
+                    <th>Reading</th>
+
+                    <th>Unit</th>
+
+                    {% if request.cookies.get('greenTrackRole', '').lower() in ['admin', 'staff'] %}
+                    <th class="actions-header">Actions</th>
+                    {% endif %}
+
+                </tr>
+
+                <tbody id="environmentalDataBody"></tbody>
+
+            </table>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+<script src="{{ url_for('static', filename='js/api.js') }}"></script>
+<script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+<script src="{{ url_for('static', filename='js/crud.js') }}"></script>
+
+<script>
+    // Dashboard state
+    let allDashboardData = [];
+    let currentTableFilters = {
+        category: "All Categories",
+        building: "All Buildings",
+        sort: "Newest First"
+    };
+
+    // Fetch and initialize dashboard data from API
+    async function initializeDashboard() {
+        try {
+            const response = await fetch("/api/environmental-data");
+            if (!response.ok) {
+                throw new Error("Failed to fetch environmental data");
+            }
+            
+            allDashboardData = await response.json();
+            updateDashboardCards();
+            renderTrendChart();
+            displayFilteredTable();
+            setupEventListeners();
+        } catch (error) {
+            console.error("Error initializing dashboard:", error);
+            document.getElementById("environmentalDataBody").innerHTML = 
+                '<tr><td colspan="6" style="text-align: center; padding: 20px;">Unable to load environmental data.</td></tr>';
+        }
+    }
+
+    // Update summary cards with actual data
+    function updateDashboardCards() {
+        const energy = allDashboardData.filter(r => r.categoryname === "Energy");
+        const water = allDashboardData.filter(r => r.categoryname === "Water");
+        const waste = allDashboardData.filter(r => r.categoryname === "Waste");
+        
+        const energyTotal = energy.reduce((sum, r) => sum + Number(r.reading || 0), 0);
+        const waterTotal = water.reduce((sum, r) => sum + Number(r.reading || 0), 0);
+        const wasteTotal = waste.reduce((sum, r) => sum + Number(r.reading || 0), 0);
+        
+        document.getElementById("dashboardEnergyTotal").textContent = energyTotal.toLocaleString() + " kWh";
+        document.getElementById("dashboardWaterTotal").textContent = waterTotal.toLocaleString() + " gal";
+        document.getElementById("dashboardWasteTotal").textContent = wasteTotal.toLocaleString() + " lbs";
+    }
+
+    // Render trend chart with Energy, Water, and Waste on same chart
+    function renderTrendChart() {
+        const canvas = document.getElementById("dashboardTrendChart");
+        if (!canvas || typeof Chart === "undefined") {
+            return;
+        }
+        
+        // Group data by date for each category
+        const energyByDate = {};
+        const waterByDate = {};
+        const wasteByDate = {};
+        
+        allDashboardData.forEach(record => {
+            const date = record.daterecorded;
+            if (record.categoryname === "Energy") {
+                energyByDate[date] = (energyByDate[date] || 0) + Number(record.reading || 0);
+            } else if (record.categoryname === "Water") {
+                waterByDate[date] = (waterByDate[date] || 0) + Number(record.reading || 0);
+            } else if (record.categoryname === "Waste") {
+                wasteByDate[date] = (wasteByDate[date] || 0) + Number(record.reading || 0);
+            }
+        });
+        
+        // Get all unique dates and sort them
+        const allDates = Array.from(new Set(allDashboardData.map(r => r.daterecorded))).sort();
+        
+        // Destroy existing chart if it exists
+        const existingChart = Chart.getChart(canvas);
+        if (existingChart) {
+            existingChart.destroy();
+        }
+        
+        if (allDates.length === 0) {
+            canvas.style.display = "none";
+            const chartContainer = canvas.parentElement;
+            let message = chartContainer.querySelector(".chart-empty");
+            if (!message) {
+                message = document.createElement("p");
+                message.className = "chart-empty";
+                message.textContent = "No data available.";
+                chartContainer.appendChild(message);
+            }
+            return;
+        }
+        
+        const oldMessage = canvas.parentElement.querySelector(".chart-empty");
+        if (oldMessage) {
+            oldMessage.remove();
+        }
+        
+        canvas.style.display = "block";
+        
+        // Create the trend chart with soft/light colors
+        new Chart(canvas, {
+            type: "line",
+            data: {
+                labels: allDates,
+                datasets: [
+                    { 
+                        label: "Energy (kWh)", 
+                        data: allDates.map(date => energyByDate[date] || 0), 
+                        borderColor: "#FFE196",
+                        backgroundColor: "rgba(255, 225, 150, 0.15)",
+                        fill: false, 
+                        tension: 0.3,
+                        borderWidth: 2
+                    },
+                    { 
+                        label: "Water (gal)", 
+                        data: allDates.map(date => waterByDate[date] || 0), 
+                        borderColor: "#9FC3F5",
+                        backgroundColor: "rgba(159, 195, 245, 0.15)",
+                        fill: false, 
+                        tension: 0.3,
+                        borderWidth: 2
+                    },
+                    { 
+                        label: "Waste (lbs)", 
+                        data: allDates.map(date => wasteByDate[date] || 0), 
+                        borderColor: "#FFBE8F",
+                        backgroundColor: "rgba(255, 190, 143, 0.15)",
+                        fill: false, 
+                        tension: 0.3,
+                        borderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: { 
+                        display: true, 
+                        position: "bottom",
+                        labels: {
+                            padding: 12,
+                            font: { size: 12 }
+                        }
+                    },
+                    padding: {
+                        top: 10,
+                        bottom: 10
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            font: { size: 11 }
+                        },
+                        grid: {
+                            display: true,
+                            color: "rgba(0, 0, 0, 0.05)"
+                        }
+                    },
+                    y: { 
+                        beginAtZero: true,
+                        ticks: {
+                            font: { size: 11 }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Apply all filters and sorting to the data
+    function getFilteredAndSortedData() {
+        let filteredData = allDashboardData.slice();
+        
+        // Apply category filter
+        if (currentTableFilters.category !== "All Categories") {
+            filteredData = filteredData.filter(r => r.categoryname === currentTableFilters.category);
+        }
+        
+        // Apply building filter
+        if (currentTableFilters.building !== "All Buildings") {
+            filteredData = filteredData.filter(r => r.buildingname === currentTableFilters.building);
+        }
+        
+        // Apply sorting
+        const sortType = currentTableFilters.sort;
+        if (sortType === "Newest First") {
+            filteredData.sort((a, b) => new Date(b.daterecorded) - new Date(a.daterecorded));
+        } else if (sortType === "Oldest First") {
+            filteredData.sort((a, b) => new Date(a.daterecorded) - new Date(b.daterecorded));
+        } else if (sortType === "Building A-Z") {
+            filteredData.sort((a, b) => (a.buildingname || "").localeCompare(b.buildingname || ""));
+        } else if (sortType === "Building Z-A") {
+            filteredData.sort((a, b) => (b.buildingname || "").localeCompare(a.buildingname || ""));
+        } else if (sortType === "Reading Low to High") {
+            filteredData.sort((a, b) => Number(a.reading || 0) - Number(b.reading || 0));
+        } else if (sortType === "Reading High to Low") {
+            filteredData.sort((a, b) => Number(b.reading || 0) - Number(a.reading || 0));
+        }
+        
+        return filteredData;
+    }
+
+    // Display table with applied filters
+    function displayFilteredTable() {
+        const tableBody = document.getElementById("environmentalDataBody");
+        if (!tableBody) {
+            return;
+        }
+        
+        tableBody.innerHTML = "";
+        
+        const filteredData = getFilteredAndSortedData();
+        
+        if (filteredData.length === 0) {
+            const row = document.createElement("tr");
+            const cell = document.createElement("td");
+            cell.colSpan = canEditData() ? 6 : 5;
+            cell.style.textAlign = "center";
+            cell.style.padding = "20px";
+            cell.textContent = "No records match the selected filters.";
+            row.appendChild(cell);
+            tableBody.appendChild(row);
+            return;
+        }
+        
+        // Display each record
+        filteredData.forEach(record => {
+            const row = document.createElement("tr");
+            
+            // Building
+            const buildingCell = document.createElement("td");
+            buildingCell.textContent = record.buildingname || "";
+            row.appendChild(buildingCell);
+            
+            // Category
+            const categoryCell = document.createElement("td");
+            categoryCell.textContent = record.categoryname || "";
+            row.appendChild(categoryCell);
+            
+            // Date
+            const dateCell = document.createElement("td");
+            dateCell.textContent = record.daterecorded || "";
+            row.appendChild(dateCell);
+            
+            // Reading
+            const readingCell = document.createElement("td");
+            readingCell.textContent = record.reading || "";
+            row.appendChild(readingCell);
+            
+            // Unit
+            const unitCell = document.createElement("td");
+            unitCell.textContent = record.unit || "";
+            row.appendChild(unitCell);
+            
+            // Actions (only for admin/staff)
+            if (canEditData()) {
+                const actionCell = document.createElement("td");
+                
+                const editButton = document.createElement("button");
+                editButton.type = "button";
+                editButton.textContent = "Edit";
+                editButton.addEventListener("click", function () {
+                    editPostgresRecord(record, function() {
+                        initializeDashboard();
+                    });
+                });
+                actionCell.appendChild(editButton);
+                
+                const deleteButton = document.createElement("button");
+                deleteButton.type = "button";
+                deleteButton.textContent = "Delete";
+                deleteButton.addEventListener("click", function () {
+                    deletePostgresRecord(record.dataid, function() {
+                        initializeDashboard();
+                    });
+                });
+                actionCell.appendChild(deleteButton);
+                
+                row.appendChild(actionCell);
+            }
+            
+            tableBody.appendChild(row);
+        });
+    }
+
+    // Setup event listeners for table filters
+    function setupEventListeners() {
+        // Table filter dropdowns
+        const filterCategory = document.getElementById("filterCategory");
+        const filterBuilding = document.getElementById("filterBuilding");
+        const filterSort = document.getElementById("filterSort");
+        
+        if (filterCategory) {
+            filterCategory.addEventListener("change", function(e) {
+                currentTableFilters.category = e.target.value;
+                displayFilteredTable();
+            });
+        }
+        
+        if (filterBuilding) {
+            filterBuilding.addEventListener("change", function(e) {
+                currentTableFilters.building = e.target.value;
+                displayFilteredTable();
+            });
+        }
+        
+        if (filterSort) {
+            filterSort.addEventListener("change", function(e) {
+                currentTableFilters.sort = e.target.value;
+                displayFilteredTable();
+            });
+        }
+    }
+
+    // Initialize dashboard when page loads
+    window.addEventListener("load", initializeDashboard);
+</script>
+
+</body>
+</html>
