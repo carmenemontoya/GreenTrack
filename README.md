@@ -59,6 +59,24 @@ The technical solution includes:
 - Data validation
 - Responsive web interface
 
+## Project Preview
+
+### Campus Sustainability Dashboard
+
+![GreenTrack Campus Sustainability Dashboard](screenshots/dashboard.png)
+
+### Energy Dashboard
+
+![GreenTrack Energy Dashboard](screenshots/energy-dashboard.png)
+
+### Environmental Data Management
+
+![GreenTrack Environmental Data Management](screenshots/data-upload.png)
+
+### Sustainability Reports
+
+![GreenTrack Sustainability Reports](screenshots/sustainability-reports.png)
+
 ## Features
 
 - Campus sustainability dashboard with energy, water, and waste summaries
