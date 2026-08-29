@@ -46,6 +46,7 @@ function login(email, password) {
 
     localStorage.setItem("greenTrackUser", JSON.stringify(storedUser));
     localStorage.setItem("greentrackLoggedIn", "true");
+    document.cookie = "greenTrackRole=" + encodeURIComponent(storedUser.role) + "; path=/; SameSite=Lax";
 
     return {
         success: true,
@@ -66,7 +67,8 @@ function getCurrentUser() {
 function logout() {
     localStorage.removeItem("greenTrackUser");
     localStorage.removeItem("greentrackLoggedIn");
-    window.location.href = "login.html";
+    document.cookie = "greenTrackRole=; Max-Age=0; path=/; SameSite=Lax";
+    window.location.href = "/login";
 }
 
 function canEditData() {
