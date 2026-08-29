@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenTrack Upload Data</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            <span class="material-symbols-outlined">eco</span> GreenTrack
+        </div>
+
+        <ul class="menu">
+            <li>
+                <a href="{{ url_for('index') }}"><span class="material-symbols-outlined">dashboard</span>Dashboard</a>
+            </li>
+            <li>
+                <a href="{{ url_for('energy') }}"><span class="material-symbols-outlined">bolt</span>Energy</a>
+            </li>
+            <li>
+                <a href="{{ url_for('water') }}"><span class="material-symbols-outlined">water_drop</span>Water</a>
+            </li>
+            <li>
+                <a href="{{ url_for('waste') }}"><span class="material-symbols-outlined">recycling</span>Waste</a>
+            </li>
+            <li>
+                <a href="{{ url_for('reports') }}"><span class="material-symbols-outlined">description</span>Reports</a>
+            </li>
+            <li class="active">
+                <a href="{{ url_for('upload') }}"><span class="material-symbols-outlined">upload</span>Upload Data</a>
+            </li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <button class="signout-button" id="signOutButton">
+                <span class="material-symbols-outlined">logout</span>
+                Sign Out
+            </button>
+        </div>
+
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+
+        <header class="topbar">
+            <div>
+                <h1>Environmental Data Upload</h1>
+            </div>
+            <div class="profile">
+                <div class="profile-info">
+                    <span class="material-symbols-outlined">account_circle</span>
+                    <div>
+                        <strong>Carmen Montoya</strong><br>
+                        <small>Student</small>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section class="cards cards-triple">
+            <div class="card">
+                <div class="card-icon"><span class="material-symbols-outlined">database</span></div>
+                <h3>Total Data Records</h3>
+                <h2 id="uploadTotalRecords">0</h2>
+                <p>Environmental readings stored</p>
+            </div>
+            <div class="card">
+                <div class="card-icon"><span class="material-symbols-outlined">apartment</span></div>
+                <h3>Buildings Tracked</h3>
+                <h2 id="uploadBuildingsTracked">0</h2>
+                <p>Unique buildings with data</p>
+            </div>
+            <div class="card">
+                <div class="card-icon"><span class="material-symbols-outlined">calendar_month</span></div>
+                <h3>Latest Data Date</h3>
+                <h2 id="uploadLatestDate">None</h2>
+                <p>From PostgreSQL records</p>
+            </div>
+        </section>
+
+        <section class="card upload-card">
+            <h2>Upload Environmental Data</h2>
+            <div class="upload-grid">
+                <div class="upload-item">
+                    <div class="upload-heading">
+                        <span class="material-symbols-outlined icon-energy">bolt</span>
+                        <div>
+                            <h3>Energy Consumption Data</h3>
+                            <p>Upload electricity usage records measured in kWh.</p>
+                        </div>
+                    </div>
+                    <button type="button" class="upload-button" id="energyUploadButton">Choose Energy File</button>
+                    <div class="upload-meta">
+                        <span>Accepted format: CSV</span>
+                    </div>
+                </div>
+                <div class="upload-item">
+                    <div class="upload-heading">
+                        <span class="material-symbols-outlined icon-water">water_drop</span>
+                        <div>
+                            <h3>Water Consumption Data</h3>
+                            <p>Upload campus water usage records measured in gallons.</p>
+                        </div>
+                    </div>
+                    <button type="button" class="upload-button" id="waterUploadButton">Choose Water File</button>
+                    <div class="upload-meta">
+                        <span>Accepted format: CSV</span>
+                    </div>
+                </div>
+                <div class="upload-item">
+                    <div class="upload-heading">
+                        <span class="material-symbols-outlined icon-waste">recycling</span>
+                        <div>
+                            <h3>Waste Management Data</h3>
+                            <p>Upload recycling and waste collection records measured in pounds.</p>
+                        </div>
+                    </div>
+                    <button type="button" class="upload-button" id="wasteUploadButton">Choose Waste File</button>
+                    <div class="upload-meta">
+                        <span>Accepted format: CSV</span>
+                    </div>
+                </div>
+            </div>
+            <div id="uploadStatus" style="margin-top: 18px; min-height: 24px; font-weight: 500;"></div>
+        </section>
+
+        <input type="file" id="energyFileInput" accept=".csv" hidden>
+        <input type="file" id="waterFileInput" accept=".csv" hidden>
+        <input type="file" id="wasteFileInput" accept=".csv" hidden>
+
+        <section class="updates" style="margin-top: 28px;">
+            <h2>Environmental Data Management</h2>
+
+            <div class="table-filters" style="margin-bottom: 16px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <label for="uploadFilterCategory" style="font-size: 14px; font-weight: 500;">Category:</label>
+                    <select id="uploadFilterCategory" style="padding: 6px 10px; border-radius: 8px; border: 1px solid #E5E7EB; font-size: 14px;">
+                        <option value="All Categories">All Categories</option>
+                        <option value="Energy">Energy</option>
+                        <option value="Water">Water</option>
+                        <option value="Waste">Waste</option>
+                    </select>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <label for="uploadFilterBuilding" style="font-size: 14px; font-weight: 500;">Building:</label>
+                    <select id="uploadFilterBuilding" style="padding: 6px 10px; border-radius: 8px; border: 1px solid #E5E7EB; font-size: 14px;">
+                        <option value="All Buildings">All Buildings</option>
+                        <option value="Science Building">Science Building</option>
+                        <option value="Student Center">Student Center</option>
+                        <option value="Library">Library</option>
+                        <option value="Engineering Building">Engineering Building</option>
+                        <option value="Administration Building">Administration Building</option>
+                    </select>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <label for="uploadFilterSort" style="font-size: 14px; font-weight: 500;">Sort By:</label>
+                    <select id="uploadFilterSort" style="padding: 6px 10px; border-radius: 8px; border: 1px solid #E5E7EB; font-size: 14px;">
+                        <option value="Newest First">Newest First</option>
+                        <option value="Oldest First">Oldest First</option>
+                        <option value="Building A-Z">Building A-Z</option>
+                        <option value="Building Z-A">Building Z-A</option>
+                        <option value="Reading Low to High">Reading Low to High</option>
+                        <option value="Reading High to Low">Reading High to Low</option>
+                    </select>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Building</th>
+                        <th>Category</th>
+                        <th>Date</th>
+                        <th>Reading</th>
+                        <th>Unit</th>
+                        {% if request.cookies.get('greenTrackRole', '').lower() in ['admin', 'staff'] %}
+                        <th class="actions-header">Actions</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody id="uploadEnvironmentalDataBody"></tbody>
+            </table>
+        </section>
+
+    </main>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+<script src="{{ url_for('static', filename='js/api.js') }}"></script>
+<script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+<script src="{{ url_for('static', filename='js/crud.js') }}"></script>
+
+<script>
+    // Upload page state for the Environmental Data Management table
+    let allUploadManagementData = [];
+    let uploadManagementFilters = {
+        category: "All Categories",
+        building: "All Buildings",
+        sort: "Newest First"
+    };
+
+    // Update the summary cards from actual PostgreSQL data
+    function updateUploadSummaryCard(records) {
+        const totalElement = document.getElementById("uploadTotalRecords");
+        if (totalElement) {
+            totalElement.textContent = records.length.toLocaleString();
+        }
+
+        const buildingsElement = document.getElementById("uploadBuildingsTracked");
+        if (buildingsElement) {
+            const uniqueBuildings = new Set(records.map(r => r.buildingname).filter(Boolean));
+            buildingsElement.textContent = uniqueBuildings.size.toLocaleString();
+        }
+
+        const latestDateElement = document.getElementById("uploadLatestDate");
+        if (latestDateElement) {
+            const dates = records.map(r => r.daterecorded).filter(Boolean).sort();
+            const latestDate = dates.length ? dates[dates.length - 1] : null;
+            latestDateElement.textContent = latestDate
+                ? new Date(latestDate + "T00:00:00").toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })
+                : "None";
+        }
+    }
+
+    // Load environmental records for the management table
+    async function loadUploadManagementData() {
+        const tableBody = document.getElementById("uploadEnvironmentalDataBody");
+        if (!tableBody) {
+            return;
+        }
+
+        try {
+            const response = await fetch("/api/environmental-data");
+            if (!response.ok) {
+                throw new Error("Environmental data request failed.");
+            }
+
+            allUploadManagementData = await response.json();
+            updateUploadSummaryCard(allUploadManagementData);
+            displayFilteredUploadManagementTable();
+        } catch (error) {
+            tableBody.innerHTML = "";
+            const messageRow = document.createElement("tr");
+            const messageCell = document.createElement("td");
+            messageCell.colSpan = canEditData() ? 6 : 5;
+            messageCell.style.textAlign = "center";
+            messageCell.style.padding = "20px";
+            messageCell.textContent = "Unable to load environmental data.";
+            messageRow.appendChild(messageCell);
+            tableBody.appendChild(messageRow);
+            console.error(error);
+        }
+    }
+
+    // Get filtered and sorted management records
+    function getFilteredAndSortedUploadManagementData() {
+        let filteredData = allUploadManagementData.slice();
+
+        if (uploadManagementFilters.category !== "All Categories") {
+            filteredData = filteredData.filter(r => r.categoryname === uploadManagementFilters.category);
+        }
+
+        if (uploadManagementFilters.building !== "All Buildings") {
+            filteredData = filteredData.filter(r => r.buildingname === uploadManagementFilters.building);
+        }
+
+        const sortType = uploadManagementFilters.sort;
+        if (sortType === "Newest First") {
+            filteredData.sort((a, b) => new Date(b.daterecorded) - new Date(a.daterecorded));
+        } else if (sortType === "Oldest First") {
+            filteredData.sort((a, b) => new Date(a.daterecorded) - new Date(b.daterecorded));
+        } else if (sortType === "Building A-Z") {
+            filteredData.sort((a, b) => (a.buildingname || "").localeCompare(b.buildingname || ""));
+        } else if (sortType === "Building Z-A") {
+            filteredData.sort((a, b) => (b.buildingname || "").localeCompare(a.buildingname || ""));
+        } else if (sortType === "Reading Low to High") {
+            filteredData.sort((a, b) => Number(a.reading || 0) - Number(b.reading || 0));
+        } else if (sortType === "Reading High to Low") {
+            filteredData.sort((a, b) => Number(b.reading || 0) - Number(a.reading || 0));
+        }
+
+        return filteredData;
+    }
+
+    // Render the Environmental Data Management table
+    function displayFilteredUploadManagementTable() {
+        const tableBody = document.getElementById("uploadEnvironmentalDataBody");
+        if (!tableBody) {
+            return;
+        }
+
+        tableBody.innerHTML = "";
+        const filteredData = getFilteredAndSortedUploadManagementData();
+
+        if (filteredData.length === 0) {
+            const row = document.createElement("tr");
+            const cell = document.createElement("td");
+            cell.colSpan = canEditData() ? 6 : 5;
+            cell.style.textAlign = "center";
+            cell.style.padding = "20px";
+            cell.textContent = "No records match the selected filters.";
+            row.appendChild(cell);
+            tableBody.appendChild(row);
+            return;
+        }
+
+        filteredData.forEach(record => {
+            const row = document.createElement("tr");
+
+            [record.buildingname, record.categoryname, record.daterecorded, record.reading, record.unit].forEach(value => {
+                const cell = document.createElement("td");
+                cell.textContent = value ?? "";
+                row.appendChild(cell);
+            });
+
+            if (canEditData()) {
+                const actionCell = document.createElement("td");
+
+                const editButton = document.createElement("button");
+                editButton.type = "button";
+                editButton.textContent = "Edit";
+                editButton.addEventListener("click", function () {
+                    editPostgresRecord(record, loadUploadManagementData);
+                });
+                actionCell.appendChild(editButton);
+
+                const deleteButton = document.createElement("button");
+                deleteButton.type = "button";
+                deleteButton.textContent = "Delete";
+                deleteButton.addEventListener("click", function () {
+                    deletePostgresRecord(record.dataid, loadUploadManagementData);
+                });
+                actionCell.appendChild(deleteButton);
+
+                row.appendChild(actionCell);
+            }
+
+            tableBody.appendChild(row);
+        });
+    }
+
+    // Setup event listeners for the management table filters
+    function setupUploadManagementFilters() {
+        const filterCategory = document.getElementById("uploadFilterCategory");
+        const filterBuilding = document.getElementById("uploadFilterBuilding");
+        const filterSort = document.getElementById("uploadFilterSort");
+
+        if (filterCategory) {
+            filterCategory.addEventListener("change", function (e) {
+                uploadManagementFilters.category = e.target.value;
+                displayFilteredUploadManagementTable();
+            });
+        }
+
+        if (filterBuilding) {
+            filterBuilding.addEventListener("change", function (e) {
+                uploadManagementFilters.building = e.target.value;
+                displayFilteredUploadManagementTable();
+            });
+        }
+
+        if (filterSort) {
+            filterSort.addEventListener("change", function (e) {
+                uploadManagementFilters.sort = e.target.value;
+                displayFilteredUploadManagementTable();
+            });
+        }
+    }
+
+    window.addEventListener("load", function () {
+        setupUploadManagementFilters();
+        loadUploadManagementData();
+    });
+</script>
+
+</body>
+</html>
