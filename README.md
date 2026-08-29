@@ -106,9 +106,18 @@ The technical solution includes:
 ```text
 GreenTrack/
 ├── data/
+│
+├── screenshots/
+│   ├── dashboard.png
+│   ├── energy-dashboard.png
+│   ├── data-upload.png
+│   ├── sustainability-reports.png
+│   └── login.png
+│
 ├── static/
 │   ├── css/
 │   └── js/
+│
 ├── templates/
 │   ├── energy.html
 │   ├── index.html
@@ -117,6 +126,7 @@ GreenTrack/
 │   ├── upload.html
 │   ├── waste.html
 │   └── water.html
+│
 ├── app.py
 ├── requirements.txt
 └── README.md
