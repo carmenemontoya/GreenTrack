@@ -60,7 +60,7 @@ function validateEnvironmentalData(data) {
 }
 
 
-function submitEnvironmentalData(data) {
+async function submitEnvironmentalData(data) {
 
     const user = getCurrentUser();
 
@@ -79,6 +79,7 @@ function submitEnvironmentalData(data) {
     }
 
     const validation = validateEnvironmentalData(data);
+    console.log("Validation result:", validation, data);
 
     if (!validation.valid) {
         return {
@@ -95,7 +96,40 @@ function submitEnvironmentalData(data) {
         unit: data.unit
     };
 
-    return addEnvironmentalData(newRecord);
+    try {
+        console.log("POST request sent:", newRecord);
+        const response = await fetch("/api/environmental-data", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                building: data.building,
+                category: data.category,
+                date: data.date,
+                reading: Number(data.reading),
+                unit: data.unit
+            })
+        });
+        const result = await response.json();
+        console.log("Flask response received:", response.status, result);
+
+        if (!response.ok) {
+            return {
+                success: false,
+                message: result.error || "Unable to save environmental data."
+            };
+        }
+
+        addEnvironmentalData(newRecord);
+        return result;
+    } catch (error) {
+        console.error(error);
+        return {
+            success: false,
+            message: "Unable to save environmental data."
+        };
+    }
 }
 
 function normalizeHeader(header) {
@@ -162,6 +196,17 @@ function parseCsvToObjects(text) {
     }
 
     const headerRow = rows[0].map(normalizeHeader);
+    const requiredHeaders = ["building", "date", "reading", "unit"];
+    const missingHeaders = requiredHeaders.filter(function (header) {
+        return !headerRow.includes(header);
+    });
+
+    if (missingHeaders.length > 0) {
+        throw new Error(
+            "CSV must include these headers: Building, Date, Reading, Unit."
+        );
+    }
+
     const fieldMap = {
         building: "building",
         location: "building",
@@ -219,62 +264,70 @@ function showUploadStatus(message, isError) {
     }
 
     statusElement.textContent = message;
-    statusElement.style.color = isError ? "#d32f2f" : "#1b5e20";
+    statusElement.style.color = isError ? "#d32f2f" : "#78975F";
 }
 
 function processUploadFile(file, category) {
+    console.log("File selected:", file.name, file.size, "bytes");
+    console.log("Category selected:", category);
     const reader = new FileReader();
 
-    reader.onload = function (event) {
-        const rawText = event.target.result;
-        const records = parseCsvToObjects(rawText);
+    reader.onload = async function (event) {
+        try {
+            const rawText = event.target.result;
+            const records = parseCsvToObjects(rawText);
+            console.log("CSV parsed:", records);
 
-        if (records.length === 0) {
-            showUploadStatus("No valid records found in the selected file.", true);
-            return;
-        }
-
-        const user = getCurrentUser();
-
-        if (!user) {
-            showUploadStatus("Please log in before uploading data.", true);
-            return;
-        }
-
-        if (!canEditData()) {
-            showUploadStatus("You do not have permission to upload data.", true);
-            return;
-        }
-
-        let addedCount = 0;
-
-        for (let i = 0; i < records.length; i++) {
-            const sourceRecord = records[i];
-            const uploadRecord = {
-                building: sourceRecord.building || "",
-                category: category,
-                date: sourceRecord.date || "",
-                reading: sourceRecord.reading || "",
-                unit: sourceRecord.unit || getDefaultUnit(category)
-            };
-
-            const result = submitEnvironmentalData(uploadRecord);
-
-            if (!result.success) {
-                showUploadStatus(
-                    "Upload failed on row " + (i + 2) + ": " + result.message,
-                    true
-                );
+            if (records.length === 0) {
+                showUploadStatus("No valid records found in the selected file.", true);
                 return;
             }
 
-            addedCount += 1;
-        }
+            const user = getCurrentUser();
 
-        showUploadStatus(
-            addedCount + " record" + (addedCount === 1 ? "" : "s") + " uploaded successfully for " + category + ".",
-            false
-        );
+            if (!user) {
+                showUploadStatus("Please log in before uploading data.", true);
+                return;
+            }
+
+            if (!canEditData()) {
+                showUploadStatus("You do not have permission to upload data.", true);
+                return;
+            }
+
+            let addedCount = 0;
+
+            for (let i = 0; i < records.length; i++) {
+                const sourceRecord = records[i];
+                const uploadRecord = {
+                    building: sourceRecord.building || "",
+                    category: category,
+                    date: sourceRecord.date || "",
+                    reading: sourceRecord.reading || "",
+                    unit: sourceRecord.unit || getDefaultUnit(category)
+                };
+
+                const result = await submitEnvironmentalData(uploadRecord);
+
+                if (!result.success) {
+                    showUploadStatus(
+                        "Upload failed on row " + (i + 2) + ": " + result.message,
+                        true
+                    );
+                    return;
+                }
+
+                addedCount += 1;
+            }
+
+            showUploadStatus(
+                addedCount + " record" + (addedCount === 1 ? "" : "s") + " uploaded successfully for " + category + ".",
+                false
+            );
+        } catch (error) {
+            console.error("Upload processing failed:", error);
+            showUploadStatus(error.message || "Unable to process the selected file.", true);
+        }
     };
 
     reader.onerror = function () {
@@ -305,6 +358,7 @@ function setupUploadButtons() {
         });
 
         input.addEventListener("change", function () {
+            console.log("File input change event:", item.inputId);
             if (input.files && input.files[0]) {
                 processUploadFile(input.files[0], item.category);
             }
