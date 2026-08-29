@@ -11,18 +11,16 @@
     <!-- Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body class="login-page">
 
 <div class="login-container">
     <div class="login-branding">
-        <div class="brand-mark">🌿</div>
         <div>
             <h1>GreenTrack</h1>
             <p class="brand-subtitle">Campus Sustainability Dashboard</p>
-            <p class="brand-description">Monitor campus energy, water, and waste data through one centralized sustainability platform.</p>
         </div>
     </div>
 
@@ -63,30 +61,18 @@
                 <p class="login-message" id="loginMessage"></p>
             </form>
         </section>
-
-        <section class="info-panel">
-            <div class="card notice-card login-notice">
-                <div class="notice-heading">
-                    <span class="material-symbols-outlined">security</span>
-                    <div>
-                        <h3>Secure Access</h3>
-                        <p>Access to environmental data is controlled by user roles. Administrators can manage data, while students and faculty have read-only access.</p>
-                    </div>
-                </div>
-            </div>
-
-            <footer class="login-footer">
-                <p>GreenTrack © 2026</p>
-                <p>Campus Sustainability Management System</p>
-            </footer>
-        </section>
     </div>
 </div>
 
-<script src="js/script.js"></script>
-<script src="js/auth.js"></script>
-<script src="js/api.js"></script>
-<script src="js/upload.js"></script>
-<script src="js/crud.js"></script>
+<footer class="login-footer">
+    <p>GreenTrack © 2026</p>
+    <p>Campus Sustainability Management System</p>
+</footer>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+<script src="{{ url_for('static', filename='js/api.js') }}"></script>
+<script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+<script src="{{ url_for('static', filename='js/crud.js') }}"></script>
 </body>
 </html>
