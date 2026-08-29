@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenTrack Waste</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Sidebar -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <span class="material-symbols-outlined">eco</span> GreenTrack
+        </div>
+
+        <ul class="menu">
+
+            <li>
+                <a href="{{ url_for('index') }}"><span class="material-symbols-outlined">dashboard</span>Dashboard</a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('energy') }}"><span class="material-symbols-outlined">bolt</span>Energy</a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('water') }}"><span class="material-symbols-outlined">water_drop</span>Water</a>
+            </li>
+
+            <li class="active">
+                <a href="{{ url_for('waste') }}"><span class="material-symbols-outlined">recycling</span>Waste</a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('reports') }}"><span class="material-symbols-outlined">description</span>Reports</a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('upload') }}"><span class="material-symbols-outlined">upload</span>Upload Data</a>
+            </li>
+
+        </ul>
+
+        <div class="sidebar-footer">
+            <button class="signout-button" id="signOutButton">
+                <span class="material-symbols-outlined">logout</span>
+                Sign Out
+            </button>
+        </div>
+
+    </aside>
+
+    <!-- Main Content -->
+
+    <main class="main">
+
+        <!-- Top Bar -->
+
+        <header class="topbar">
+
+            <div>
+                <h1>Waste Management Dashboard</h1>
+            </div>
+
+            <div class="profile">
+                <div class="profile-info">
+                    <span class="material-symbols-outlined">account_circle</span>
+
+                    <div>
+                        <strong>Carmen Montoya</strong><br>
+                        <small>Student</small>
+                    </div>
+                </div>
+            </div>
+
+        </header>
+
+        <!-- KPI Cards -->
+
+        <section class="cards">
+
+            <div class="card">
+                <div class="card-icon card-icon--waste"><span class="material-symbols-outlined">recycling</span></div>
+                <h3>Total Waste Collected</h3>
+                <h2 id="wasteTotal">0 lbs</h2>
+                <p>Total of PostgreSQL Waste readings</p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon card-icon--waste"><span class="material-symbols-outlined">calculate</span></div>
+                <h3>Average Waste per Record</h3>
+                <h2 id="wasteAveragePerRecord">0 lbs</h2>
+                <p>Total Waste readings ÷ number of records</p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon"><span class="material-symbols-outlined">apartment</span></div>
+                <h3>Highest Waste Producing Building</h3>
+                <h2 id="wasteHighestBuilding">None</h2>
+                <p id="wasteHighestBuildingValue">0 lbs</p>
+            </div>
+
+        </section>
+
+        <!-- Charts -->
+
+        <section class="chart-grid">
+
+            <div class="chart-box chart-panel">
+                <div class="chart-title">Monthly Waste Collection</div>
+                <canvas id="wasteLineChart"></canvas>
+            </div>
+
+            <div class="chart-box chart-panel">
+                <div class="chart-title">Waste Distribution by Building</div>
+                <canvas id="wasteDoughnutChart"></canvas>
+            </div>
+
+        </section>
+
+        <!-- Sustainability Insights -->
+
+        <section class="card insights-card">
+            <h2>Sustainability Insights</h2>
+            <div class="insights-list">
+                <div class="insight-item">
+                    <span class="material-symbols-outlined">bar_chart</span>
+                    <p id="insightHighestBuilding">Not enough data to determine the highest waste building.</p>
+                </div>
+                <div class="insight-item">
+                    <span class="material-symbols-outlined">location_city</span>
+                    <p id="insightLowestBuilding">Not enough data to determine the lowest waste building.</p>
+                </div>
+                <div class="insight-item">
+                    <span class="material-symbols-outlined">eco</span>
+                    <p id="insightLatestActivity">Not enough data to determine the latest waste activity.</p>
+                </div>
+                <div class="insight-item">
+                    <span class="material-symbols-outlined">grass</span>
+                    <p id="insightWasteTrend">Not enough historical data to calculate a waste trend.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Waste Records -->
+
+        <section class="updates">
+
+            <h2>Recent Waste Collection Records</h2>
+
+            <div class="table-filters" style="margin-bottom: 16px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <label for="filterBuilding" style="font-size: 14px; font-weight: 500;">Building:</label>
+                    <select id="filterBuilding" style="padding: 6px 10px; border-radius: 8px; border: 1px solid #E5E7EB; font-size: 14px;">
+                        <option value="All Buildings">All Buildings</option>
+                        <option value="Science Building">Science Building</option>
+                        <option value="Student Center">Student Center</option>
+                        <option value="Library">Library</option>
+                        <option value="Engineering Building">Engineering Building</option>
+                        <option value="Administration Building">Administration Building</option>
+                    </select>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <label for="filterSort" style="font-size: 14px; font-weight: 500;">Sort By:</label>
+                    <select id="filterSort" style="padding: 6px 10px; border-radius: 8px; border: 1px solid #E5E7EB; font-size: 14px;">
+                        <option value="Newest First">Newest First</option>
+                        <option value="Oldest First">Oldest First</option>
+                        <option value="Building A-Z">Building A-Z</option>
+                        <option value="Building Z-A">Building Z-A</option>
+                        <option value="Reading Low to High">Reading Low to High</option>
+                        <option value="Reading High to Low">Reading High to Low</option>
+                    </select>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Building</th>
+                        <th>Date</th>
+                        <th>Reading</th>
+                        <th>Unit</th>
+                        {% if request.cookies.get('greenTrackRole', '').lower() in ['admin', 'staff'] %}
+                        <th class="actions-header">Actions</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody id="wasteDataBody"></tbody>
+            </table>
+
+        </section>
+
+        <!-- Quick Actions -->
+
+        <section class="card quick-actions">
+            <h2>Quick Actions</h2>
+            <div class="action-buttons">
+                <button class="action-button">
+                    <span class="material-symbols-outlined">upload_file</span>
+                    Upload Waste Data
+                </button>
+                <button class="action-button">
+                    <span class="material-symbols-outlined">summarize</span>
+                    Generate Report
+                </button>
+                <button class="action-button">
+                    <span class="material-symbols-outlined">file_download</span>
+                    Export CSV
+                </button>
+                <button class="action-button">
+                    <span class="material-symbols-outlined">download</span>
+                    Download PDF
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+<script src="{{ url_for('static', filename='js/api.js') }}"></script>
+<script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+<script src="{{ url_for('static', filename='js/crud.js') }}"></script>
+
+<script>
+    // Waste page state
+    let allWasteData = [];
+    let wastePageFilters = {
+        building: "All Buildings",
+        sort: "Newest First"
+    };
+
+    // Load waste data from API
+    async function loadWasteData() {
+        try {
+            const response = await fetch("/api/environmental-data");
+            if (!response.ok) {
+                throw new Error("Failed to fetch environmental data");
+            }
+
+            const allData = await response.json();
+            // Filter only Waste records
+            allWasteData = allData.filter(r => r.categoryname === "Waste");
+
+            updateWasteSummaryCards();
+            renderWasteCharts();
+            updateSustainabilityInsights();
+            displayFilteredWasteTable();
+            setupWasteEventListeners();
+        } catch (error) {
+            console.error("Error loading waste data:", error);
+            document.getElementById("wasteDataBody").innerHTML =
+                '<tr><td colspan="5" style="text-align: center; padding: 20px;">Unable to load waste data.</td></tr>';
+        }
+    }
+
+    // Update waste summary cards with actual data
+    function updateWasteSummaryCards() {
+        // Total Waste Collected
+        const totalWaste = allWasteData.reduce((sum, r) => sum + Number(r.reading || 0), 0);
+        document.getElementById("wasteTotal").textContent = totalWaste.toLocaleString() + " lbs";
+
+        // Highest Waste Producing Building
+        const buildingTotals = {};
+        allWasteData.forEach(record => {
+            const building = record.buildingname;
+            buildingTotals[building] = (buildingTotals[building] || 0) + Number(record.reading || 0);
+        });
+
+        let highestBuilding = "None";
+        let highestValue = 0;
+        for (const building in buildingTotals) {
+            if (buildingTotals[building] > highestValue) {
+                highestValue = buildingTotals[building];
+                highestBuilding = building;
+            }
+        }
+
+        document.getElementById("wasteHighestBuilding").textContent = highestBuilding;
+        document.getElementById("wasteHighestBuildingValue").textContent = highestValue.toLocaleString() + " lbs";
+
+        // Average Waste per Record
+        const averagePerRecord = allWasteData.length > 0 ? totalWaste / allWasteData.length : 0;
+        document.getElementById("wasteAveragePerRecord").textContent = averagePerRecord.toLocaleString(undefined, { maximumFractionDigits: 2 }) + " lbs";
+    }
+
+    // Update Sustainability Insights with values calculated from actual Waste data
+    function updateSustainabilityInsights() {
+        const highestEl = document.getElementById("insightHighestBuilding");
+        const lowestEl = document.getElementById("insightLowestBuilding");
+        const latestEl = document.getElementById("insightLatestActivity");
+        const trendEl = document.getElementById("insightWasteTrend");
+
+        if (allWasteData.length === 0) {
+            highestEl.textContent = "Not enough data to determine the highest waste building.";
+            lowestEl.textContent = "Not enough data to determine the lowest waste building.";
+            latestEl.textContent = "Not enough data to determine the latest waste activity.";
+            trendEl.textContent = "Not enough historical data to calculate a waste trend.";
+            return;
+        }
+
+        // Highest / Lowest Waste Building
+        const buildingTotals = {};
+        allWasteData.forEach(record => {
+            const building = record.buildingname;
+            buildingTotals[building] = (buildingTotals[building] || 0) + Number(record.reading || 0);
+        });
+
+        const buildingEntries = Object.entries(buildingTotals);
+        if (buildingEntries.length > 0) {
+            const sortedByTotal = buildingEntries.slice().sort((a, b) => b[1] - a[1]);
+            const [highestName, highestTotal] = sortedByTotal[0];
+            const [lowestName, lowestTotal] = sortedByTotal[sortedByTotal.length - 1];
+            highestEl.textContent = highestName + " currently has the highest total waste at " + highestTotal.toLocaleString() + " lbs.";
+            lowestEl.textContent = lowestName + " currently has the lowest total waste at " + lowestTotal.toLocaleString() + " lbs.";
+        }
+
+        // Latest Waste Activity
+        const uniqueDates = Array.from(new Set(allWasteData.map(r => r.daterecorded))).sort();
+        const latestDate = uniqueDates[uniqueDates.length - 1];
+        const latestTotal = allWasteData.filter(r => r.daterecorded === latestDate).reduce((sum, r) => sum + Number(r.reading || 0), 0);
+        latestEl.textContent = "The latest waste activity was recorded on " + latestDate + " with a total of " + latestTotal.toLocaleString() + " lbs.";
+
+        // Waste Trend: compare most recent date with the previous date
+        if (uniqueDates.length >= 2) {
+            const previousDate = uniqueDates[uniqueDates.length - 2];
+            const previousTotal = allWasteData.filter(r => r.daterecorded === previousDate).reduce((sum, r) => sum + Number(r.reading || 0), 0);
+
+            if (previousTotal > 0) {
+                const percentChange = ((latestTotal - previousTotal) / previousTotal) * 100;
+                const direction = percentChange >= 0 ? "increased" : "decreased";
+                trendEl.textContent = "Waste collection " + direction + " by " + Math.abs(percentChange).toLocaleString(undefined, { maximumFractionDigits: 1 }) + "% compared with the previous reporting period.";
+            } else {
+                trendEl.textContent = "Not enough historical data to calculate a waste trend.";
+            }
+        } else {
+            trendEl.textContent = "Not enough historical data to calculate a waste trend.";
+        }
+    }
+
+    // Render waste charts
+    function renderWasteCharts() {
+        const wasteByDate = {};
+        const wasteByBuilding = {};
+
+        allWasteData.forEach(record => {
+            const date = record.daterecorded;
+            const building = record.buildingname;
+
+            wasteByDate[date] = (wasteByDate[date] || 0) + Number(record.reading || 0);
+            wasteByBuilding[building] = (wasteByBuilding[building] || 0) + Number(record.reading || 0);
+        });
+
+        const dateLabels = Object.keys(wasteByDate).sort();
+        const dateValues = dateLabels.map(d => wasteByDate[d]);
+        renderChart("wasteLineChart", "line", dateLabels, dateValues, "Waste (lbs)", ["#FFBE8F"]);
+
+        const buildingLabels = Object.keys(wasteByBuilding);
+        const buildingValues = buildingLabels.map(b => wasteByBuilding[b]);
+        renderChart("wasteDoughnutChart", "doughnut", buildingLabels, buildingValues, "Waste (lbs)", ["#FFBE8F", "#FFD8B8", "#F5A868", "#E8935A", "#D9803F", "#C46A2E"]);
+    }
+
+    // Get filtered and sorted waste records
+    function getFilteredAndSortedWasteData() {
+        let filteredData = allWasteData.slice();
+
+        // Apply building filter
+        if (wastePageFilters.building !== "All Buildings") {
+            filteredData = filteredData.filter(r => r.buildingname === wastePageFilters.building);
+        }
+
+        // Apply sorting
+        const sortType = wastePageFilters.sort;
+        if (sortType === "Newest First") {
+            filteredData.sort((a, b) => new Date(b.daterecorded) - new Date(a.daterecorded));
+        } else if (sortType === "Oldest First") {
+            filteredData.sort((a, b) => new Date(a.daterecorded) - new Date(b.daterecorded));
+        } else if (sortType === "Building A-Z") {
+            filteredData.sort((a, b) => (a.buildingname || "").localeCompare(b.buildingname || ""));
+        } else if (sortType === "Building Z-A") {
+            filteredData.sort((a, b) => (b.buildingname || "").localeCompare(a.buildingname || ""));
+        } else if (sortType === "Reading Low to High") {
+            filteredData.sort((a, b) => Number(a.reading || 0) - Number(b.reading || 0));
+        } else if (sortType === "Reading High to Low") {
+            filteredData.sort((a, b) => Number(b.reading || 0) - Number(a.reading || 0));
+        }
+
+        return filteredData;
+    }
+
+    // Display filtered waste table
+    function displayFilteredWasteTable() {
+        const tableBody = document.getElementById("wasteDataBody");
+        if (!tableBody) {
+            return;
+        }
+
+        tableBody.innerHTML = "";
+        const filteredData = getFilteredAndSortedWasteData();
+
+        if (filteredData.length === 0) {
+            const row = document.createElement("tr");
+            const cell = document.createElement("td");
+            cell.colSpan = canEditData() ? 5 : 4;
+            cell.style.textAlign = "center";
+            cell.style.padding = "20px";
+            cell.textContent = "No records match the selected filters.";
+            row.appendChild(cell);
+            tableBody.appendChild(row);
+            return;
+        }
+
+        filteredData.forEach(record => {
+            const row = document.createElement("tr");
+
+            // Building
+            const buildingCell = document.createElement("td");
+            buildingCell.textContent = record.buildingname || "";
+            row.appendChild(buildingCell);
+
+            // Date
+            const dateCell = document.createElement("td");
+            dateCell.textContent = record.daterecorded || "";
+            row.appendChild(dateCell);
+
+            // Reading
+            const readingCell = document.createElement("td");
+            readingCell.textContent = record.reading || "";
+            row.appendChild(readingCell);
+
+            // Unit
+            const unitCell = document.createElement("td");
+            unitCell.textContent = record.unit || "";
+            row.appendChild(unitCell);
+
+            // Actions (only for admin/staff)
+            if (canEditData()) {
+                const actionCell = document.createElement("td");
+
+                const editButton = document.createElement("button");
+                editButton.type = "button";
+                editButton.textContent = "Edit";
+                editButton.addEventListener("click", function () {
+                    editPostgresRecord(record, function() {
+                        loadWasteData();
+                    });
+                });
+                actionCell.appendChild(editButton);
+
+                const deleteButton = document.createElement("button");
+                deleteButton.type = "button";
+                deleteButton.textContent = "Delete";
+                deleteButton.addEventListener("click", function () {
+                    deletePostgresRecord(record.dataid, function() {
+                        loadWasteData();
+                    });
+                });
+                actionCell.appendChild(deleteButton);
+
+                row.appendChild(actionCell);
+            }
+
+            tableBody.appendChild(row);
+        });
+    }
+
+    // Setup event listeners for filters
+    function setupWasteEventListeners() {
+        const filterBuilding = document.getElementById("filterBuilding");
+        const filterSort = document.getElementById("filterSort");
+
+        if (filterBuilding) {
+            filterBuilding.addEventListener("change", function(e) {
+                wastePageFilters.building = e.target.value;
+                displayFilteredWasteTable();
+            });
+        }
+
+        if (filterSort) {
+            filterSort.addEventListener("change", function(e) {
+                wastePageFilters.sort = e.target.value;
+                displayFilteredWasteTable();
+            });
+        }
+    }
+
+    // Load waste data when page loads
+    window.addEventListener("load", loadWasteData);
+</script>
+
+</body>
+</html>
