@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenTrack Reports</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Sidebar -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <span class="material-symbols-outlined">eco</span> GreenTrack
+        </div>
+
+        <ul class="menu">
+
+            <li>
+                <a href="{{ url_for('index') }}"><span class="material-symbols-outlined">dashboard</span>Dashboard</a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('energy') }}"><span class="material-symbols-outlined">bolt</span>Energy</a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('water') }}"><span class="material-symbols-outlined">water_drop</span>Water</a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('waste') }}"><span class="material-symbols-outlined">recycling</span>Waste</a>
+            </li>
+
+            <li class="active">
+                <a href="{{ url_for('reports') }}"><span class="material-symbols-outlined">description</span>Reports</a>
+            </li>
+
+            <li>
+                <a href="{{ url_for('upload') }}"><span class="material-symbols-outlined">upload</span>Upload Data</a>
+            </li>
+
+        </ul>
+
+        <div class="sidebar-footer">
+            <button class="signout-button" id="signOutButton">
+                <span class="material-symbols-outlined">logout</span>
+                Sign Out
+            </button>
+        </div>
+
+    </aside>
+
+    <!-- Main Content -->
+
+    <main class="main">
+
+        <!-- Top Bar -->
+
+        <header class="topbar">
+
+            <div>
+                <h1>Sustainability Reports</h1>
+            </div>
+
+            <div class="profile">
+                <div class="profile-info">
+                    <span class="material-symbols-outlined">account_circle</span>
+
+                    <div>
+                        <strong>Carmen Montoya</strong><br>
+                        <small>Student</small>
+                    </div>
+                </div>
+            </div>
+
+        </header>
+
+        <!-- KPI Cards -->
+
+        <section class="cards cards-quad">
+
+            <div class="card">
+                <div class="card-icon"><span class="material-symbols-outlined">description</span></div>
+                <h3>Environmental Records</h3>
+                <h2 id="reportsRecordTotal">0</h2>
+                <p>Records in PostgreSQL</p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon card-icon--energy"><span class="material-symbols-outlined">bolt</span></div>
+                <h3>Energy Records</h3>
+                <h2 id="reportsEnergyTotal">0</h2>
+                <p>Records in PostgreSQL</p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon card-icon--water"><span class="material-symbols-outlined">water_drop</span></div>
+                <h3>Water Records</h3>
+                <h2 id="reportsWaterTotal">0</h2>
+                <p>Records in PostgreSQL</p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon card-icon--waste"><span class="material-symbols-outlined">recycling</span></div>
+                <h3>Waste Records</h3>
+                <h2 id="reportsWasteTotal">0</h2>
+                <p>Records in PostgreSQL</p>
+            </div>
+
+        </section>
+
+        <!-- Secondary Summary Row -->
+
+        <section class="cards cards-compact">
+
+            <div class="card">
+                <div class="card-icon"><span class="material-symbols-outlined">calendar_month</span></div>
+                <h3>Latest Data Date</h3>
+                <h2 id="reportsLatestDate">None</h2>
+                <p>From PostgreSQL records</p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon"><span class="material-symbols-outlined">event</span></div>
+                <h3>Oldest Data Date</h3>
+                <h2 id="reportsOldestDate">None</h2>
+                <p>From PostgreSQL records</p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon"><span class="material-symbols-outlined">apartment</span></div>
+                <h3>Buildings Tracked</h3>
+                <h2 id="reportsBuildingsTracked">0</h2>
+                <p>Unique buildings with data</p>
+            </div>
+
+        </section>
+
+        <!-- Report Filters -->
+
+        <section class="card report-filters">
+            <div class="filter-grid">
+                <div class="filter-item">
+                    <label for="reportFilterCategory">Report Category</label>
+                    <select id="reportFilterCategory">
+                        <option value="All">All</option>
+                        <option value="Energy">Energy</option>
+                        <option value="Water">Water</option>
+                        <option value="Waste">Waste</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label for="reportFilterPeriod">Reporting Period</label>
+                    <select id="reportFilterPeriod">
+                        <option value="All">All Available Data</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label for="reportFilterFormat">Report Format</label>
+                    <select id="reportFilterFormat">
+                        <option value="All">All</option>
+                        <option value="PDF">PDF</option>
+                        <option value="CSV">CSV</option>
+                    </select>
+                </div>
+                <div class="filter-item filter-search">
+                    <label for="reportSearchInput">Search Reports</label>
+                    <input type="text" id="reportSearchInput" placeholder="Search reports...">
+                </div>
+            </div>
+            <div class="filter-actions">
+                <button class="filter-button" id="reportApplyFilter" type="button">Filter</button>
+                <button class="filter-button filter-reset" id="reportResetFilter" type="button">Reset</button>
+            </div>
+        </section>
+
+        <!-- Reports Table -->
+
+        <section class="updates">
+            <h2>Available Reports</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Report Name</th>
+                        <th>Category</th>
+                        <th>Reporting Period</th>
+                        <th>Records Available</th>
+                        <th class="actions-header">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="availableReportsBody"></tbody>
+            </table>
+        </section>
+
+    </main>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+<script src="{{ url_for('static', filename='js/api.js') }}"></script>
+<script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+<script src="{{ url_for('static', filename='js/crud.js') }}"></script>
+
+<script>
+    // Reports page state
+    let allReportsData = [];
+    let reportsPageFilters = {
+        category: "All",
+        period: "All",
+        format: "All",
+        search: ""
+    };
+
+    const REPORT_DEFINITIONS = [
+        { name: "Campus Sustainability Summary", category: "All" },
+        { name: "Energy Usage Report", category: "Energy" },
+        { name: "Water Usage Report", category: "Water" },
+        { name: "Waste Collection Report", category: "Waste" }
+    ];
+
+    const REPORT_UNITS = { Energy: "kWh", Water: "gal", Waste: "lbs" };
+
+    function monthLabel(periodValue) {
+        if (periodValue === "All") {
+            return "All Available Data";
+        }
+        const [year, month] = periodValue.split("-");
+        const date = new Date(Number(year), Number(month) - 1, 1);
+        return date.toLocaleDateString(undefined, { month: "long", year: "numeric" });
+    }
+
+    // Load reports data from API
+    async function loadReportsData() {
+        try {
+            const response = await fetch("/api/environmental-data");
+            if (!response.ok) {
+                throw new Error("Failed to fetch environmental data");
+            }
+
+            allReportsData = await response.json();
+
+            updateReportsSummaryCards();
+            populateReportingPeriods();
+            displayAvailableReports();
+            setupReportsEventListeners();
+        } catch (error) {
+            console.error("Error loading reports data:", error);
+            document.getElementById("availableReportsBody").innerHTML =
+                '<tr><td colspan="5" style="text-align: center; padding: 20px;">Unable to load report data.</td></tr>';
+        }
+    }
+
+    // Update the record-count and date-range summary cards
+    function updateReportsSummaryCards() {
+        document.getElementById("reportsRecordTotal").textContent = allReportsData.length.toLocaleString();
+        document.getElementById("reportsEnergyTotal").textContent =
+            allReportsData.filter(r => r.categoryname === "Energy").length.toLocaleString();
+        document.getElementById("reportsWaterTotal").textContent =
+            allReportsData.filter(r => r.categoryname === "Water").length.toLocaleString();
+        document.getElementById("reportsWasteTotal").textContent =
+            allReportsData.filter(r => r.categoryname === "Waste").length.toLocaleString();
+
+        const dates = allReportsData.map(r => r.daterecorded).filter(Boolean).sort();
+        document.getElementById("reportsLatestDate").textContent = dates.length ? dates[dates.length - 1] : "None";
+        document.getElementById("reportsOldestDate").textContent = dates.length ? dates[0] : "None";
+
+        const uniqueBuildings = new Set(allReportsData.map(r => r.buildingname).filter(Boolean));
+        document.getElementById("reportsBuildingsTracked").textContent = uniqueBuildings.size.toLocaleString();
+    }
+
+    // Populate the Reporting Period select from the months actually present in the data
+    function populateReportingPeriods() {
+        const select = document.getElementById("reportFilterPeriod");
+        if (!select) {
+            return;
+        }
+
+        const months = Array.from(new Set(
+            allReportsData
+                .map(r => (r.daterecorded || "").slice(0, 7))
+                .filter(Boolean)
+        )).sort().reverse();
+
+        select.innerHTML = '<option value="All">All Available Data</option>';
+        months.forEach(month => {
+            const option = document.createElement("option");
+            option.value = month;
+            option.textContent = monthLabel(month);
+            select.appendChild(option);
+        });
+    }
+
+    // Get records matching a given report category and the selected reporting period
+    function getRecordsForReport(category, period) {
+        return allReportsData.filter(record => {
+            const matchesCategory = category === "All" || record.categoryname === category;
+            const matchesPeriod = period === "All" || (record.daterecorded || "").startsWith(period);
+            return matchesCategory && matchesPeriod;
+        });
+    }
+
+    // Render the Available Reports table based on the current filters
+    function displayAvailableReports() {
+        const tableBody = document.getElementById("availableReportsBody");
+        if (!tableBody) {
+            return;
+        }
+
+        const period = reportsPageFilters.period;
+        const searchTerm = reportsPageFilters.search.trim().toLowerCase();
+
+        const visibleReports = REPORT_DEFINITIONS.filter(report => {
+            const matchesCategory = reportsPageFilters.category === "All" || report.category === reportsPageFilters.category;
+            const matchesSearch = !searchTerm ||
+                report.name.toLowerCase().includes(searchTerm) ||
+                report.category.toLowerCase().includes(searchTerm);
+            return matchesCategory && matchesSearch;
+        });
+
+        tableBody.innerHTML = "";
+
+        if (visibleReports.length === 0) {
+            const row = document.createElement("tr");
+            const cell = document.createElement("td");
+            cell.colSpan = 5;
+            cell.style.textAlign = "center";
+            cell.style.padding = "20px";
+            cell.textContent = "No reports match the selected filters.";
+            row.appendChild(cell);
+            tableBody.appendChild(row);
+            return;
+        }
+
+        visibleReports.forEach(report => {
+            const recordCount = getRecordsForReport(report.category, period).length;
+
+            const row = document.createElement("tr");
+
+            const nameCell = document.createElement("td");
+            nameCell.textContent = report.name;
+            row.appendChild(nameCell);
+
+            const categoryCell = document.createElement("td");
+            categoryCell.textContent = report.category;
+            row.appendChild(categoryCell);
+
+            const periodCell = document.createElement("td");
+            periodCell.textContent = monthLabel(period);
+            row.appendChild(periodCell);
+
+            const recordsCell = document.createElement("td");
+            recordsCell.textContent = recordCount.toLocaleString();
+            row.appendChild(recordsCell);
+
+            const actionsCell = document.createElement("td");
+
+            const pdfButton = document.createElement("button");
+            pdfButton.type = "button";
+            pdfButton.textContent = "Export PDF";
+            pdfButton.addEventListener("click", function () {
+                exportReportPDF(report.category, period);
+            });
+            actionsCell.appendChild(pdfButton);
+
+            const csvButton = document.createElement("button");
+            csvButton.type = "button";
+            csvButton.textContent = "Export CSV";
+            csvButton.addEventListener("click", function () {
+                exportReportCSV(report.category, period);
+            });
+            actionsCell.appendChild(csvButton);
+
+            row.appendChild(actionsCell);
+            tableBody.appendChild(row);
+        });
+    }
+
+    // Build and download a CSV file for the filtered records
+    function exportReportCSV(category, period) {
+        const records = getRecordsForReport(category, period);
+
+        if (records.length === 0) {
+            alert("There are no records available to export for the selected filters.");
+            return;
+        }
+
+        const header = ["Building", "Category", "Date", "Reading", "Unit"];
+        const rows = records.map(r => [
+            r.buildingname, r.categoryname, r.daterecorded, r.reading, r.unit
+        ]);
+
+        const csvContent = [header, ...rows]
+            .map(row => row.map(value => '"' + String(value ?? "").replace(/"/g, '""') + '"').join(","))
+            .join("\n");
+
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "greentrack-" + category.toLowerCase() + "-report.csv";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }
+
+    // Download a formatted PDF report generated by the Flask backend
+    function exportReportPDF(category, period) {
+        const params = new URLSearchParams({ category: category, period: period });
+        window.location.href = "/api/reports/pdf?" + params.toString();
+    }
+
+    // Setup event listeners for filters
+    function setupReportsEventListeners() {
+        const applyButton = document.getElementById("reportApplyFilter");
+        const resetButton = document.getElementById("reportResetFilter");
+
+        if (applyButton) {
+            applyButton.addEventListener("click", function () {
+                reportsPageFilters.category = document.getElementById("reportFilterCategory").value;
+                reportsPageFilters.period = document.getElementById("reportFilterPeriod").value;
+                reportsPageFilters.format = document.getElementById("reportFilterFormat").value;
+                reportsPageFilters.search = document.getElementById("reportSearchInput").value;
+                displayAvailableReports();
+            });
+        }
+
+        if (resetButton) {
+            resetButton.addEventListener("click", function () {
+                document.getElementById("reportFilterCategory").value = "All";
+                document.getElementById("reportFilterPeriod").value = "All";
+                document.getElementById("reportFilterFormat").value = "All";
+                document.getElementById("reportSearchInput").value = "";
+                reportsPageFilters = { category: "All", period: "All", format: "All", search: "" };
+                displayAvailableReports();
+            });
+        }
+    }
+
+    // Load reports data when page loads
+    window.addEventListener("load", loadReportsData);
+</script>
+
+</body>
+</html>
